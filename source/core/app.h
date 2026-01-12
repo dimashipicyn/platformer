@@ -23,11 +23,11 @@ public:
         m_running = false;
     }
 
-    Assets* Assets;
-    Renderer* Renderer;
-    Input* Input;
-    StateManager* StateManager;
-    Ui* Ui;
+    ::Assets* Assets;
+    ::Renderer* Renderer;
+    ::Input* Input;
+    ::StateManager* StateManager;
+    ::Ui* Ui;
 
     float DeltaTime {};
 

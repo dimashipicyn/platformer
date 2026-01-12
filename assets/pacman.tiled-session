@@ -1,0 +1,32 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "pacman-main.tsx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "Все файлы (*)",
+    "fileStates": {
+        "pacman-main.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.5
+        }
+    },
+    "frame.defaultDuration": 100,
+    "last.imagePath": "C:/Users/Dmitriy.Shchipitsyn/Downloads",
+    "openFiles": [
+        "pacman-main.tsx"
+    ],
+    "project": "pacman.tiled-project",
+    "property.type": "int",
+    "recentFiles": [
+        "pacman-main.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.spacing": 0,
+    "tileset.tileSize": {
+        "height": 24,
+        "width": 24
+    }
+}

@@ -18,8 +18,7 @@
         "CMAKE_CXX_EXTENSIONS": "OFF",
         "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/bin",
         "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/bin",
-        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "${sourceDir}/bin",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "${sourceDir}/bin"
       }
     },
     {
@@ -42,24 +41,34 @@
       }
     },
     {
-      "name": "clang-debug",
+      "name": "gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "clang-debug-vckpg",
       "inherits": [
         "base",
         "clang"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_FLAGS": "-g -O0"
+        "CMAKE_CXX_FLAGS": "-g -O0",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
     {
-      "name": "clang-release",
+      "name": "clang-release-vcpkg",
       "inherits": [
         "base",
         "clang"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
     {
@@ -67,6 +76,17 @@
       "inherits": [
         "base-emsdk"
       ]
+    },
+    {
+      "name": "gcc-debug",
+      "inherits": [
+        "base",
+        "gcc"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-g -O0"
+      }
     }
   ]
 }

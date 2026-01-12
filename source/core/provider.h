@@ -5,6 +5,7 @@ class Assets;
 class Input;
 class StateManager;
 class Ui;
+class App;
 
 class Provider
 {
