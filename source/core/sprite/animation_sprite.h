@@ -12,7 +12,7 @@ struct SpriteAnimationFrameInfo {
 class AnimationSprite : public Sprite
 {
 public:
-    AnimationSprite(const SpriteAtlas& atlas, int id, std::vector<SpriteAnimationFrameInfo> frames);
+    AnimationSprite(const SpriteAtlas& atlas, int id, std::string type, std::vector<SpriteAnimationFrameInfo> frames);
 
     void Update(float deltatime);
     void Draw(Renderer& r, const Point& pos) const;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.2" name="pacman-main" tilewidth="24" tileheight="24" tilecount="60" columns="15">
- <image source="../Downloads/pacman-main.png" width="381" height="119"/>
+ <image source="images/pacman-main.png" width="382" height="118"/>
  <tile id="0" type="ghost_red">
   <properties>
    <property name="state" value="move-right"/>

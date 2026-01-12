@@ -10,13 +10,18 @@ class SpriteAtlas;
 class Sprite
 {
 public:
-    Sprite(int id);
+    Sprite(const SpriteAtlas& atlas, int id, std::string type);
 
     const std::string& GetType() const
     {
         return m_type;
     }
     
+    void AddProperty(std::string name, SpriteProperty property)
+    {
+        m_props.emplace(std::move(name), std::move(property));
+    }
+
     const SpriteProperty& GetProperty(const std::string& name) const
     {
         return m_props.at(name);

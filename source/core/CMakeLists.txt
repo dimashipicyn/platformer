@@ -17,3 +17,5 @@ target_sources(${PROJECT_NAME} PUBLIC
     ui.h
     ui.cpp
 )
+
+add_subdirectory(sprite)
