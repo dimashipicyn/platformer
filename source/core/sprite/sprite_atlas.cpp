@@ -18,6 +18,8 @@ SpriteAtlas::SpriteAtlas(const char* atlas_path)
     auto tileset = doc.child("tileset");
     m_sprite_size.x = tileset.attribute("tilewidth").as_int();
     m_sprite_size.y = tileset.attribute("tileheight").as_int();
+    m_count = tileset.attribute("tilecount").as_int();
+    m_columns = tileset.attribute("columns").as_int();
 
     std::string texture_path = tileset.child("image").attribute("source").as_string();
     m_texture = Provider::Self().Assets()->GetTexture(texture_path);
@@ -49,14 +51,14 @@ SpriteAtlas::SpriteAtlas(const char* atlas_path)
                 frames.emplace_back(SpriteAnimationFrameInfo{frame_id, duration});
             }
 
-            AnimationSprite anim_sprite(*this, id, std::move(type), std::move(frames));
+            AnimationSprite anim_sprite(*this, std::move(frames));
             get_props(tile, anim_sprite);
 
             m_animation_sprites.emplace(id, anim_sprite);
         }
         else
         {
-            Sprite sprite(*this, id, std::move(type));
+            Sprite sprite(GetTextureBySpriteId(id));
             get_props(tile, sprite);
 
             m_sprites.emplace(id, sprite);
@@ -78,7 +80,7 @@ const Sprite& SpriteAtlas::GetSpriteById(int id) const
     {
         // If the sprite ID is valid in terms of position but not found in the map,
         // create a default sprite on-the-fly.
-        Sprite sprite(*this, id, "");
+        Sprite sprite(GetTextureBySpriteId(id));
         m_sprites.emplace(id, sprite);
         return m_sprites.at(id);
     }
@@ -106,8 +108,7 @@ Texture SpriteAtlas::GetTextureBySpriteId(int id) const
 
 Point SpriteAtlas::GetSpritePositionInAtlas(int id) const
 {
-    int sprites_per_row = m_texture.Src.w / m_sprite_size.x;
-    int x = (id % sprites_per_row) * m_sprite_size.x;
-    int y = (id / sprites_per_row) * m_sprite_size.y;
+    int x = (id % m_columns) * m_sprite_size.x;
+    int y = (id / m_columns) * m_sprite_size.y;
     return Point{x, y};
 }

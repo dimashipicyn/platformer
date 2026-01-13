@@ -4,4 +4,5 @@ PRIVATE
     sprite.cpp
     animation_sprite.cpp
     sprite_property.cpp
+    map.cpp
 )

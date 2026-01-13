@@ -3,8 +3,8 @@
 #include "core/texture.h"
 #include "sprite_atlas.h"
 
-AnimationSprite::AnimationSprite(const SpriteAtlas& atlas, int id, std::string type, std::vector<SpriteAnimationFrameInfo> frames)
-    : Sprite(atlas, id, type), m_atlas(atlas), m_frames(std::move(frames))
+AnimationSprite::AnimationSprite(const SpriteAtlas& atlas, std::vector<SpriteAnimationFrameInfo> frames)
+    : Sprite(), m_atlas(atlas), m_frames(std::move(frames))
 {
 }
 
@@ -22,7 +22,6 @@ void AnimationSprite::Update(float deltatime)
 void AnimationSprite::Draw(Renderer& r, const Point& pos) const
 {
     int id = m_frames[m_current_frame].sprite_id;
-    auto tex = m_atlas.GetTextureBySpriteId(id);
-
-    r.DrawTexture(tex, pos);
+    const auto& sprite = m_atlas.GetSpriteById(id);
+    sprite.Draw(r, pos);
 }

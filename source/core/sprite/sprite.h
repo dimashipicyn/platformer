@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/renderer.h"
+#include "core/texture.h"
 #include "sprite_property.h"
 
 #include <map>
@@ -10,12 +11,8 @@ class SpriteAtlas;
 class Sprite
 {
 public:
-    Sprite(const SpriteAtlas& atlas, int id, std::string type);
-
-    const std::string& GetType() const
-    {
-        return m_type;
-    }
+    Sprite() = default;
+    Sprite(Texture texture);
     
     void AddProperty(std::string name, SpriteProperty property)
     {
@@ -27,13 +24,12 @@ public:
         return m_props.at(name);
     }
 
+    Size GetSize() const;
+
     virtual void Update(float /*deltatime*/) {};
     virtual void Draw(Renderer& r, const Point& pos) const;
 
 private:
-    const SpriteAtlas& m_atlas;
-
-    int m_id {};
-    std::string m_type;
+    Texture m_texture;
     std::map<std::string, SpriteProperty> m_props;
 };

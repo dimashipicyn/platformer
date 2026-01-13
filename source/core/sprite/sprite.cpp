@@ -3,13 +3,17 @@
 #include "core/texture.h"
 #include "sprite_atlas.h"
 
-Sprite::Sprite(const SpriteAtlas& atlas, int id, std::string type)
-    : m_atlas(atlas), m_id(id), m_type(std::move(type))
+Sprite::Sprite(Texture texture)
+    : m_texture(std::move(texture))
 {
+}
+
+Size Sprite::GetSize() const
+{
+    return {m_texture.Src.w, m_texture.Src.h};
 }
 
 void Sprite::Draw(Renderer& r, const Point& pos) const
 {
-    auto tex = m_atlas.GetTextureBySpriteId(m_id);
-    r.DrawTexture(tex, pos);
+    r.DrawTexture(m_texture, pos);
 }

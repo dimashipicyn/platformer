@@ -10,44 +10,25 @@ class Map
 public:
     void Load(const char* map_path);
 
+    void Update(float deltatime);
+    void Draw(Renderer& r);
+
 private:
     struct Layer {
-        int id{};
+        size_t id{};
         Size size{};
         std::vector<int> data;
     };
 
-    Sprite GetSpriteById(int id);
+    struct Object {
+        FPoint pos;
+        Sprite* sprite;
+    };
+
+    const Sprite& GetSpriteById(size_t id);
 
     std::vector<Layer> m_layers;
-    std::map<int, SpriteAtlas> m_sprite_atlas_map;
-};
-
-
-
-
-
-
-
-
-
-
-
-
-struct Tile {};
-
-struct Tileset {
-    Tile tiles[32];
-    int gid = 0;
-    int count = 32;
-};
-
-Tileset tilesets[2];
-
-Tile get_tile(int id) {
-    for (Tileset t : tilesets) {
-        if (t.gid >= id && id < (t.gid + t.count)) {
-            return t.tiles[id - t.gid];
-        }
-    }
+    std::map<size_t, SpriteAtlas> m_sprite_atlas_map;
+    
+    std::vector<Object> m_objs;
 };
