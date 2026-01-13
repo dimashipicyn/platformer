@@ -27,7 +27,8 @@ public:
         return m_props.at(name);
     }
 
-    void Draw(Renderer& r, const Point& pos) const;
+    virtual void Update(float /*deltatime*/) {};
+    virtual void Draw(Renderer& r, const Point& pos) const;
 
 private:
     const SpriteAtlas& m_atlas;
