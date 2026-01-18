@@ -4,8 +4,31 @@
 #include <SDL_rect.h>
 
 using Rect = SDL_Rect;
+using FRect = SDL_FRect;
 
-bool Contains(const Rect& rect, const Point& point);
-bool Intersect(const Rect& rect, const Rect& other);
+inline bool Contains(const Rect& rect, const Point& point)
+{
+    return SDL_PointInRect(&point, &rect);
+}
+
+inline bool Intersect(const Rect& rect, const Rect& other)
+{
+    return SDL_HasIntersection(&rect, &other);
+}
+
+inline bool Contains(const FRect& rect, const FPoint& point)
+{
+    return SDL_PointInFRect(&point, &rect);
+}
+
+inline bool Intersect(const FRect& rect, const FRect& other)
+{
+    return SDL_HasIntersectionF(&rect, &other);
+}
+
 Rect Expand(const Rect& rect, const Rect& other);
-Point Center(const Rect& rect);
+
+inline Point Center(const Rect& rect)
+{
+    return { rect.x + rect.w / 2, rect.y + rect.h / 2};
+}

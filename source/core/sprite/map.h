@@ -22,13 +22,13 @@ private:
 
     struct Object {
         FPoint pos;
-        Sprite* sprite;
+        std::unique_ptr<Sprite> sprite;
     };
 
     const Sprite& GetSpriteById(size_t id);
 
     std::vector<Layer> m_layers;
-    std::map<size_t, SpriteAtlas> m_sprite_atlas_map;
+    std::map<size_t, SpriteAtlas::Ptr> m_sprite_atlas_map;
     
     std::vector<Object> m_objs;
 };

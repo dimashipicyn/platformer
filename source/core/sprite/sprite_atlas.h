@@ -10,10 +10,11 @@
 class SpriteAtlas
 {
 public:
+    using Ptr = std::unique_ptr<SpriteAtlas>;
+
     SpriteAtlas(const char* atlas_path);
 
     const Sprite& GetSpriteById(int id) const;
-    const AnimationSprite& GetAnimationSpriteById(int id) const;
 
     size_t GetSpriteCount() const
     {
@@ -33,6 +34,6 @@ private:
     size_t m_count;
     size_t m_columns;
     Texture m_texture;
-    mutable std::map<int, Sprite> m_sprites;
-    std::map<int, AnimationSprite> m_animation_sprites;
+
+    mutable std::map<int, Sprite::Ptr> m_sprites;
 };

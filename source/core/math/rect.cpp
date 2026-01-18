@@ -3,16 +3,6 @@
 #include <SDL_rect.h>
 #include <utility>
 
-bool Contains(const Rect& rect, const Point& point)
-{
-    return SDL_PointInRect(&point, &rect);
-}
-
-bool Intersect(const Rect& rect, const Rect& other)
-{
-    return SDL_HasIntersection(&rect, &other);
-}
-
 Rect Expand(const Rect& rect, const Rect& other)
 {
     int x1 = std::min(rect.x, other.x);
@@ -26,9 +16,4 @@ Rect Expand(const Rect& rect, const Rect& other)
         x2 - x1,
         y2 - y1,
     };
-}
-
-Point Center(const Rect& rect)
-{
-    return { rect.x + rect.w / 2, rect.y + rect.h / 2};
 }

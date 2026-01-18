@@ -1,8 +1,12 @@
 #include "sprite_atlas.h"
+#include "animation_sprite.h"
 #include "core/assets.h"
-#include "core/provider.h"
 #include "core/path_resolver.h"
+#include "core/provider.h"
+#include "sprite_collision.h"
 
+
+#include <memory>
 #include <pugixml.hpp>
 
 SpriteAtlas::SpriteAtlas(const char* atlas_path)
@@ -24,7 +28,8 @@ SpriteAtlas::SpriteAtlas(const char* atlas_path)
     std::string texture_path = tileset.child("image").attribute("source").as_string();
     m_texture = Provider::Self().Assets()->GetTexture(texture_path);
 
-    auto get_props = [](pugi::xml_node tile, auto& sprite) {
+    auto get_props = [](pugi::xml_node tile, auto& sprite)
+    {
         auto properties = tile.child("properties");
         for (auto property : properties.children("property"))
         {
@@ -41,6 +46,7 @@ SpriteAtlas::SpriteAtlas(const char* atlas_path)
         int id = tile.attribute("id").as_int();
         std::string type = tile.attribute("type").as_string();
 
+        Sprite::Ptr sprite;
         if (tile.child("animation"))
         {
             std::vector<SpriteAnimationFrameInfo> frames;
@@ -48,21 +54,33 @@ SpriteAtlas::SpriteAtlas(const char* atlas_path)
             {
                 int frame_id = frame.attribute("tileid").as_int();
                 int duration = frame.attribute("duration").as_int();
-                frames.emplace_back(SpriteAnimationFrameInfo{frame_id, duration});
+                frames.emplace_back(SpriteAnimationFrameInfo { frame_id, duration });
             }
 
-            AnimationSprite anim_sprite(*this, std::move(frames));
-            get_props(tile, anim_sprite);
-
-            m_animation_sprites.emplace(id, anim_sprite);
+            sprite = std::make_unique<AnimationSprite>(GetTextureBySpriteId(id), *this, std::move(frames));
         }
         else
         {
-            Sprite sprite(GetTextureBySpriteId(id));
-            get_props(tile, sprite);
-
-            m_sprites.emplace(id, sprite);
+            sprite = std::make_unique<Sprite>(GetTextureBySpriteId(id));
         }
+
+        SpriteCollision sc;
+        
+        auto obj_group = tile.child("objectgroup");
+        for (auto object : obj_group.children("object"))
+        {
+            FRect r; 
+            r.x = object.attribute("x").as_float();
+            r.y = object.attribute("y").as_float();
+            r.w = object.attribute("width").as_float();
+            r.h = object.attribute("height").as_float();
+            sc.AddRect(r);
+        }
+
+        sprite->SetCollision(sc);
+
+        get_props(tile, *sprite);
+        m_sprites.emplace(id, std::move(sprite));
     }
 }
 
@@ -71,38 +89,24 @@ const Sprite& SpriteAtlas::GetSpriteById(int id) const
     auto it = m_sprites.find(id);
     if (it != m_sprites.end())
     {
-        return it->second;
+        return *it->second;
     }
 
     auto pos = GetSpritePositionInAtlas(id);
-    if (pos.x <= (m_texture.Src.w - m_sprite_size.x) &&
-        pos.y <= (m_texture.Src.h - m_sprite_size.y))
+    if (pos.x <= (m_texture.Src.w - m_sprite_size.x) && pos.y <= (m_texture.Src.h - m_sprite_size.y))
     {
-        // If the sprite ID is valid in terms of position but not found in the map,
-        // create a default sprite on-the-fly.
-        Sprite sprite(GetTextureBySpriteId(id));
-        m_sprites.emplace(id, sprite);
-        return m_sprites.at(id);
+        m_sprites.emplace(id, std::make_unique<Sprite>(GetTextureBySpriteId(id)));
+        return *m_sprites.at(id);
     }
 
     throw std::runtime_error("Sprite ID not found");
-}
-
-const AnimationSprite& SpriteAtlas::GetAnimationSpriteById(int id) const
-{
-    auto it = m_animation_sprites.find(id);
-    if (it != m_animation_sprites.end())
-    {
-        return it->second;
-    }
-    throw std::runtime_error("Animation sprite ID not found");
 }
 
 Texture SpriteAtlas::GetTextureBySpriteId(int id) const
 {
     Point sprite_pos = GetSpritePositionInAtlas(id);
     Texture sprite_texture = m_texture;
-    sprite_texture.Src = sprite_texture.Dest = SDL_Rect{sprite_pos.x, sprite_pos.y, m_sprite_size.x, m_sprite_size.y};
+    sprite_texture.Src = sprite_texture.Dest = SDL_Rect { sprite_pos.x, sprite_pos.y, m_sprite_size.x, m_sprite_size.y };
     return sprite_texture;
 }
 
@@ -110,5 +114,5 @@ Point SpriteAtlas::GetSpritePositionInAtlas(int id) const
 {
     int x = (id % m_columns) * m_sprite_size.x;
     int y = (id / m_columns) * m_sprite_size.y;
-    return Point{x, y};
+    return Point { x, y };
 }

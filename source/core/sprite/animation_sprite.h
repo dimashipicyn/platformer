@@ -12,11 +12,18 @@ struct SpriteAnimationFrameInfo {
 class AnimationSprite : public Sprite
 {
 public:
-    AnimationSprite(const SpriteAtlas& atlas, std::vector<SpriteAnimationFrameInfo> frames);
+    using Ptr = std::unique_ptr<AnimationSprite>;
+
+    AnimationSprite(Texture texture, const SpriteAtlas& atlas, std::vector<SpriteAnimationFrameInfo> frames);
 
     void Update(float deltatime) override;
     void Draw(Renderer& r, const Point& pos) const override;
-
+    
+    Sprite::Ptr Clone() const override
+    {
+        return std::make_unique<AnimationSprite>(*this);
+    }
+    
 private:
     const SpriteAtlas& m_atlas;
 

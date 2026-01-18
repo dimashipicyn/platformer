@@ -22,7 +22,7 @@ void Map::Load(const char* map_path)
         const int gid = tileset.attribute("firstgid").as_int();
         const char* source = tileset.attribute("source").as_string();
 
-        m_sprite_atlas_map.emplace(gid, SpriteAtlas { source });
+        m_sprite_atlas_map.emplace(gid, std::make_unique<SpriteAtlas>(source));
     }
 
     for (auto& layer : map.children("layer"))
@@ -54,14 +54,17 @@ void Map::Load(const char* map_path)
         // auto width = o.attribute("width").as_float();
         // auto height = o.attribute("height").as_float();
 
-        Object obj{FPoint{x, y}, new Sprite(GetSpriteById(gid))};
-        m_objs.emplace_back(obj);
+        Object obj{FPoint{x, y}, GetSpriteById(gid).Clone()};
+        m_objs.emplace_back(std::move(obj));
     }
 }
 
-void Map::Update(float /*deltatime*/)
+void Map::Update(float deltatime)
 {
-    
+    for (auto& o : m_objs)
+    {
+        o.sprite->Update(deltatime);
+    }
 }
 
 void Map::Draw(Renderer& r)
@@ -69,6 +72,10 @@ void Map::Draw(Renderer& r)
     for (Layer& l : m_layers) {
         for (size_t i = 0; i < l.data.size(); i++) {
             auto id = l.data[i];
+            if (id == 0) {
+                continue;
+            }
+
             auto& s = GetSpriteById(id);
 
             auto size = s.GetSize();
@@ -90,11 +97,11 @@ const Sprite& Map::GetSpriteById(size_t id)
 {
     for (const auto& [gid, atlas] : m_sprite_atlas_map)
     {
-        const auto max_gid = gid + atlas.GetSpriteCount();
+        const auto max_gid = gid + atlas->GetSpriteCount();
         if (id >= gid && id < max_gid)
         {
             const auto real_id = id - gid;
-            return atlas.GetSpriteById(real_id);
+            return atlas->GetSpriteById(real_id);
         }
     }
 

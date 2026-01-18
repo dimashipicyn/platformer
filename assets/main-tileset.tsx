@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.0" name="pacman-main" tilewidth="24" tileheight="24" tilecount="60" columns="15" objectalignment="topleft">
+<tileset version="1.10" tiledversion="1.11.2" name="pacman-main" tilewidth="24" tileheight="24" tilecount="60" columns="15" objectalignment="topleft">
  <image source="images/pacman-main.png" width="382" height="118"/>
  <tile id="0" type="ghost_red">
   <properties>
    <property name="state" value="move-right"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="21.9565" height="21.913"/>
+  </objectgroup>
   <animation>
    <frame tileid="0" duration="100"/>
    <frame tileid="1" duration="100"/>

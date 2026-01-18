@@ -1,10 +1,11 @@
 #include "animation_sprite.h"
 
 #include "core/texture.h"
+#include "sprite.h"
 #include "sprite_atlas.h"
 
-AnimationSprite::AnimationSprite(const SpriteAtlas& atlas, std::vector<SpriteAnimationFrameInfo> frames)
-    : Sprite(), m_atlas(atlas), m_frames(std::move(frames))
+AnimationSprite::AnimationSprite(Texture texture, const SpriteAtlas& atlas, std::vector<SpriteAnimationFrameInfo> frames)
+    : Sprite(std::move(texture)), m_atlas(atlas), m_frames(std::move(frames))
 {
 }
 
@@ -23,5 +24,5 @@ void AnimationSprite::Draw(Renderer& r, const Point& pos) const
 {
     int id = m_frames[m_current_frame].sprite_id;
     const auto& sprite = m_atlas.GetSpriteById(id);
-    sprite.Draw(r, pos);
+    sprite.::Sprite::Draw(r, pos);
 }
