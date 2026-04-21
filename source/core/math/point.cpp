@@ -10,7 +10,8 @@ Point operator+(const Point& l, const Point& r)
     return { l.x + r.x, l.y + r.y };
 }
 
-Point operator*(const Point& l, int value) {
+Point operator*(const Point& l, int value)
+{
     return { l.x * value, l.y * value };
 }
 

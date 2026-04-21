@@ -69,22 +69,8 @@ void Map::Update(float deltatime)
 
 void Map::Draw(Renderer& r)
 {
-    for (Layer& l : m_layers) {
-        for (size_t i = 0; i < l.data.size(); i++) {
-            auto id = l.data[i];
-            if (id == 0) {
-                continue;
-            }
-
-            auto& s = GetSpriteById(id);
-
-            auto size = s.GetSize();
-            int x = (i % l.size.x) * size.x;
-            int y = (i / l.size.y) * size.y;
-            Point offset{x, y};
-            s.Draw(r, offset);
-        }
-    }
+    TilesVisitor([&r](const Point& offset, const Sprite& sprite)
+        { sprite.Draw(r, offset); return true; });
 
     for (auto& o : m_objs)
     {
@@ -93,7 +79,7 @@ void Map::Draw(Renderer& r)
     }
 }
 
-const Sprite& Map::GetSpriteById(size_t id)
+const Sprite& Map::GetSpriteById(size_t id) const
 {
     for (const auto& [gid, atlas] : m_sprite_atlas_map)
     {

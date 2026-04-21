@@ -40,6 +40,11 @@ public:
         std::swap(m_collision, collision);
     }
 
+    const SpriteCollision& GetCollision() const
+    {
+        return m_collision;
+    }
+
 private:
     Texture m_texture;
     std::map<std::string, SpriteProperty> m_props;
